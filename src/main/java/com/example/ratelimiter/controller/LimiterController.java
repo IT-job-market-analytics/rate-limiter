@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LimiterController {
 
-    @GetMapping(value =
-            {"/quota/",
-                    "/quota/{operation_id}"})
+    @GetMapping(value = "/quota/{operation_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void getQuota(@PathVariable(required = false) String operation_id) {
-
-        if (operation_id == null) {
-            throw new BadRequestException();
-        }
+    public void getQuota(@PathVariable String operation_id) {
 
         if (operation_id.equals("test_not_found")) {
-            throw new NotFoundException();
+            throw new NotFoundException("This operation_id is not found");
         }
+    }
+
+    @GetMapping(value = "/quota/")
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void getQuota(){
+
+        throw new BadRequestException("operation_id is missing");
     }
 }

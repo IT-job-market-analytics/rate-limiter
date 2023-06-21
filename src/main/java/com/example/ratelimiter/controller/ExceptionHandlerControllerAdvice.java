@@ -2,27 +2,37 @@ package com.example.ratelimiter.controller;
 
 import com.example.ratelimiter.exception.BadRequestException;
 import com.example.ratelimiter.exception.NotFoundException;
-import org.springframework.http.HttpHeaders;
+import com.example.ratelimiter.model.ErrorMessage;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ExceptionHandlerControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<Object> handleNotFoundException(RuntimeException ex, WebRequest req) {
-        String responseBody = "";
-        return handleExceptionInternal(ex, responseBody, new HttpHeaders(), HttpStatus.NOT_FOUND, req);
+    protected ResponseEntity<ErrorMessage > handleNotFoundException(RuntimeException ex) {
+
+        return new ResponseEntity<>(ErrorMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .build(),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<Object> handleBadRequestException(RuntimeException ex, WebRequest req) {
-        String responseBody = "";
-        return handleExceptionInternal(ex, responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST, req);
+    protected ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException ex) {
+
+        return new ResponseEntity<>(ErrorMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build(),
+                HttpStatus.BAD_REQUEST);
     }
 
 }
