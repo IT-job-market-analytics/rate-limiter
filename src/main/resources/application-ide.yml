@@ -1,3 +1,5 @@
 rps-quotas:
   telegram-api: 1
-  test: 0.1
+  test-low: 0.1
+  test-1: 1
+
