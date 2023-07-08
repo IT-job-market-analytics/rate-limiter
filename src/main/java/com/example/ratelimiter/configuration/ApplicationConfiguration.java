@@ -13,7 +13,7 @@ public class ApplicationConfiguration {
     private final QuotasConfiguration quotasConfiguration;
 
     @Bean
-    public Map<String, Double> getRpsQuotas() {
+    public Map<String, Long> getRpsQuotas() {
         return Collections.unmodifiableMap(quotasConfiguration.getRpsQuotas());
     }
 }

@@ -1,7 +1,6 @@
 package com.example.ratelimiter.controller;
 
 import com.example.ratelimiter.exception.BadRequestException;
-import com.example.ratelimiter.exception.NotFoundException;
 import com.example.ratelimiter.service.TokenBucketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ public class LimiterController {
 
     @GetMapping(value = "/quota/{operation_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void getQuota(@PathVariable String operation_id) {
+    public void getQuota(@PathVariable String operation_id) throws InterruptedException {
         tokenBucketService.consumeQuota(operation_id);
     }
 

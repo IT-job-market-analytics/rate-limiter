@@ -14,5 +14,5 @@ import java.util.Map;
 @Getter
 public class QuotasConfiguration {
 
-    private final Map<String, Double> rpsQuotas = new HashMap<>();
+    private final Map<String, Long> rpsQuotas = new HashMap<>();
 }
