@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "867ff2cd-6716-41fa-889c-1647b3d55c5a",
+		"name": "it job an",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26127245"
+	},
+	"item": [
+		{
+			"name": "Rate limiter",
+			"item": [
+				{
+					"name": "0.1 rps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/quota/test-low",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"quota",
+								"test-low"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1 rps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/quota/test-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"quota",
+								"test-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "30 rps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/quota/test-30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"quota",
+								"test-30"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

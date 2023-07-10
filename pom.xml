@@ -27,6 +27,16 @@
 			<version>1.18.24</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.isomorphism</groupId>
+			<artifactId>token-bucket</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>8.3.0</version>
+		</dependency>
 
 
 		<dependency>
