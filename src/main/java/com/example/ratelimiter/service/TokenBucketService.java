@@ -8,6 +8,7 @@ import io.github.bucket4j.Refill;
 import io.github.bucket4j.local.LocalBucket;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TokenBucketService {
     static final long MAX_WAIT_NANOS = TimeUnit.HOURS.toNanos(1);
     private final Map<String, Long> quotas;
@@ -26,7 +28,11 @@ public class TokenBucketService {
     public void consumeQuota(String operation_id) throws InterruptedException {
         checkId(operation_id);
         Bucket bucket = buckets.get(operation_id);
-        System.out.println(bucket.getAvailableTokens());
+
+        log.debug(
+                "Consuming quota for operation \"" + operation_id + "\""
+                + ", available tokens: " + bucket.getAvailableTokens()
+        );
 
         while (true) {
             if (bucket.asBlocking().tryConsume(1, MAX_WAIT_NANOS, BlockingStrategy.PARKING)) {
@@ -54,6 +60,8 @@ public class TokenBucketService {
             LocalBucket bucket = Bucket.builder().addLimit(limit).build();
 
             buckets.put(operationId, bucket);
+
+            log.info("Create bucket for operation \"" + operationId + "\", RPS = " + rps);
         }
     }
 }
