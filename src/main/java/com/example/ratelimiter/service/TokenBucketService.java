@@ -5,6 +5,7 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BlockingStrategy;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.github.bucket4j.local.LocalBucket;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ public class TokenBucketService {
 
     public void consumeQuota(String operation_id) throws InterruptedException {
         checkId(operation_id);
-        System.out.println(buckets.get(operation_id).getAvailableTokens());
-
+        Bucket bucket = buckets.get(operation_id);
+        System.out.println(bucket.getAvailableTokens());
 
         while (true) {
-            if (buckets.get(operation_id).asBlocking().tryConsume(1, MAX_WAIT_NANOS, BlockingStrategy.PARKING)) {
+            if (bucket.asBlocking().tryConsume(1, MAX_WAIT_NANOS, BlockingStrategy.PARKING)) {
                 break;
             }
         }
@@ -43,11 +44,16 @@ public class TokenBucketService {
     @PostConstruct
     private void fillBucketsMap() {
         for (Map.Entry<String, Long> entry : quotas.entrySet()) {
-            Refill refill = Refill.greedy(entry.getValue(), Duration.ofSeconds(1L));
-            Bandwidth limit = Bandwidth.classic(entry.getValue(), refill);
-            buckets.put(entry.getKey(), Bucket.builder()
-                    .addLimit(limit)
-                    .build());
+            String operationId = entry.getKey();
+            Long rps = entry.getValue();
+
+            // tokens regenerate greedily (not each second, at 1/RPS interval).
+            // example - for RPS 10, tokens will refill each 100ms
+            Refill refill = Refill.greedy(rps, Duration.ofSeconds(1L));
+            Bandwidth limit = Bandwidth.classic(rps, refill);
+            LocalBucket bucket = Bucket.builder().addLimit(limit).build();
+
+            buckets.put(operationId, bucket);
         }
     }
 }
