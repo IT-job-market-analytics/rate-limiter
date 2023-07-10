@@ -1,3 +1,5 @@
 rps-quotas:
-  hh-api: 30
+  # not sure about exact hh.api RPS limit, let's start with 1
+  hh-api: 1
+  # https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this
   telegram-api: 30
